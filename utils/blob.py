@@ -19,9 +19,9 @@ class Blob(object):
 	def move(self, map):
 		if self.food < 2:
 			if self.sense_food():
-				food_position = np.random.choice(filter(self.is_possible,map.get_foods_position()))
+				food_position = np.random.choice(filter(self.is_possible,map.get_foods_position(self)))
 				self.decrease_energy(self.distance(food_position))
-				self.eat_food(food_position)
+				self.eat_food(map,food_position)
 			else:
 				position = np.random.choice(filter(self.is_possible,map.get_position(self.x,self.y)))
 				self.decrease_energy(self.distance(position))
@@ -36,7 +36,14 @@ class Blob(object):
 		if distance_top or distance_buttom or distance_left or distance_right:
 			self.safe = True
 
-	def reproduce(self):
+	def eat_food(self, map, position):
+		self.food += 1
+		map.remove_food(position[0],position[1])
+
+	def decrease_energy(self, distance):
+		self.energy -= distance
+	
+	def clone(self):
 		if food < 2:
 			return None
 
@@ -53,7 +60,7 @@ class Blob(object):
 			sense = self.mutation(self.sense)
 
 		return Blob(self.x, self.y, speed, size, energy)
-	
+
 	def is_possible(self, x, y):
 		distance = self.distance((x,y))
 		if distance <= self.move_formula():

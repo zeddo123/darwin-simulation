@@ -19,7 +19,7 @@ class Blob(object):
 	def move(self, map):
 		if self.food < 2:
 			if self.sense_food():
-				food_position = np.random.choice(filter(self.is_possible,map.get_foods_position(self)))
+				food_position = np.random.choice(filter(caneat_food,map.get_foods_position(self)))
 				self.decrease_energy(self.distance(food_position))
 				self.eat_food(map,food_position)
 			else:
@@ -39,6 +39,19 @@ class Blob(object):
 	def eat_food(self, map, position):
 		self.food += 1
 		map.remove_food(position[0],position[1])
+
+	caneat_food = lambda p: self.is_possible(p[0],p[1]) and self.senseable(p[0],p[1])
+
+	def senseable(self, x, y):
+		max_x = self.x + self.sense
+		min_x = self.x - self.sense
+
+		max_y = self.y + self.sense
+		min_y = self.y - self.sense
+
+		if x in range(min_x,max_x+1) and y in range(min_y,max_y+1):
+			return True
+		return False
 
 	def decrease_energy(self, distance):
 		self.energy -= distance

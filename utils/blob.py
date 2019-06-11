@@ -16,6 +16,11 @@ class Blob(object):
 	def find_food(self, map):
 		pass
 
+	def move(self, map):
+		if self.sense_food():
+			foods = self.get_foods_position()
+		else:
+
 	def reproduce(self):
 		if food < 2:
 			return None

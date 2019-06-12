@@ -30,9 +30,16 @@ class Environement(object):
 		food = [(i, j) for i in range(self.h) for j in range(self.h) if self.food_board[i,j] != None]
 		blob = [(b.x, b.y) for b in self.blobs if blob.size > b.size]
 		return food + blob
-		
+
 	def get_positions(self, x, y):
 		return [(i, j) for i in range(self.h) for j in range(self.h) if i != x and j != y]
+
+	def simulate(self, generation=1):
+		for g in range(generation):
+			for blob in self.blobs:
+				while not blob.safe or blob.dead:
+					
+
 
 
 

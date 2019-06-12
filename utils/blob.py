@@ -15,6 +15,7 @@ class Blob(object):
 		self.x = x
 		self.y = y
 		self.safe = False
+		self.dead = False
 
 	def move(self, map):
 		if self.food < 2:
@@ -29,12 +30,15 @@ class Blob(object):
 			self.go_home(map)
 
 	def go_home(self, map):
+		# wrong solution (need fix)
 		distance_top = self.is_possible(0,self.y) 
 		distance_buttom = self.is_possible(map.h,self.y)
 		distance_left = self.is_possible(self.x,0)
 		distance_right = self.is_possible(0,map.w)
 		if distance_top or distance_buttom or distance_left or distance_right:
 			self.safe = True
+		else:
+			self.dead = True 
 
 	def eat_food(self, map, position):
 		self.food += 1

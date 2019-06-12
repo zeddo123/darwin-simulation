@@ -1,5 +1,6 @@
+from math import ceil
 import numpy as np
-from food import Food
+from .food import Food
 
 class Environement(object):
 	"""The Environement class where the blob are evolving"""
@@ -11,7 +12,7 @@ class Environement(object):
 		self.blobs = list(args) # stores the living blobs
 
 	def set_food(self):
-		for r in range(self.h*self.w/3):
+		for r in range(ceil(self.h*self.w/5)):
 			x = np.random.randint(self.h)
 			y = np.random.randint(self.w)
 			self.food_board[x,y] = Food()
@@ -31,14 +32,27 @@ class Environement(object):
 		blob = [(b.x, b.y) for b in self.blobs if blob.size > b.size]
 		return food + blob
 
-	def get_positions(self, x, y):
-		return [(i, j) for i in range(self.h) for j in range(self.h) if i != x and j != y]
+	def draw_board(self):
+		for i in range(self.h):
+			for j in range(self.w):
+				print('| |', end='') if self.food_board[i,j] == None else print('|f|', end='')
+			print()
+
+	def print_blobs(self):
+		for i in self.blobs:
+			print(i)
 
 	def simulate(self, generation=1):
 		for g in range(generation):
+			print(f'generation number:{g}')
 			for blob in self.blobs:
-				while not blob.safe or blob.dead:
-					
+				while blob.safe != True and blob.dead == False:
+					print(blob)
+					print('safe', blob.safe)
+					print('dead', blob.dead)
+					blob.move(self)
+				blob.reset()
+
 
 
 

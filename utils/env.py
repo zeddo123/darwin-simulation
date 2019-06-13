@@ -5,7 +5,6 @@ from .food import Food
 class Environement(object):
 	"""The Environement class where the blob are evolving"""
 	def __init__(self, h, w, *args):
-		self.turn_status = 0 # 0 for inactive 1 for active
 		self.h = h
 		self.w = w
 		self.food_board = np.empty((h,w), dtype=Food) # matrixs where the food is
@@ -46,12 +45,16 @@ class Environement(object):
 		for g in range(generation):
 			print(f'generation number:{g}')
 			for blob in self.blobs:
-				while blob.safe != True and blob.dead == False:
+				while blob.is_moving:
 					print(blob)
 					print('safe', blob.safe)
 					print('dead', blob.dead)
 					blob.move(self)
 				blob.reset()
+				new_blob = blob.clone()
+				if new_blob != None:
+					self.add_blob(new_blob)
+
 
 
 

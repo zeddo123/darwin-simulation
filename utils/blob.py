@@ -16,37 +16,27 @@ class Blob(object):
 		self.y = y
 		self.safe = False
 		self.dead = False
-		self.clone = False
+		self.can_clone = False
+		self.is_moving = True
 
 		self.name = name
 		self.heritage = {'speed':speed,'size':size,'energy':energy,'sense':sense}
 
 	def move(self, map):
-		if self.food < 2:
-			if self.move_formula() >= 1:
+		if self.energy >= 1:
+			if self.food < 2:
 				if self.sense_food(map):
 					food_positions = list(filter(self.caneat_food,map.get_foods_positions(self)))
-					if len(food_positions) >= 1:
-						food_position = self.choice(food_positions)
+					food_position = self.choice(food_positions)
 
-						self.decrease_energy(self.distance(food_position))
-						self.eat_food(map,food_position)
-					else:
-						self.dead = True
+					self.decrease_energy(self.energy_cost())
+					self.eat_food(map,food_position)
 				else:
-					positions = list(filter(self.is_possible,self.sense_positions(map)))
-					if len(positions) >= 1:
-						position = self.choice(positions)
-						self.go_to(position)
-						self.decrease_energy(self.distance(position))
-					else:
-						self.dead = True
-					
+					self.discover(map)	
 			else:
-				self.safe = False
-				self.dead = True
+				self.go_home(map)
 		else:
-			self.go_home(map)
+			self.is_moving = False
 
 	def go_home(self, map):
 		distance_home = min([
@@ -57,15 +47,51 @@ class Blob(object):
 		])
 		if self.cango_home(distance_home):
 			self.safe = True
-			if self.food >= 2: self.clone = True
+			self.x = 0
+			if self.food >= 2: self.can_clone = True
+			self.is_moving = False
 		else:
 			self.dead = True
 
+	def discover(self, map):
+		for s in range(self.speed):
+			if self.energy > 0:
+				direction = np.random.randint(8)
+				self.move_in_direction(direction, map)
+				self.decrease_energy(self.energy_cost())
+				self.move(map)
+
+	def move_in_direction(self, direction, map):
+		if direction == 0:
+			self.x += 1
+		elif direction == 1:
+			self.x -= 1
+		elif direction == 2:
+			self.y -= 1
+		elif direction == 3:
+			self.y += 1
+		elif direction == 4:
+			self.x -= 1
+			self.y -= 1
+		elif direction == 5:
+			self.x -= 1
+			self.y += 1
+		elif direction == 6:
+			self.x += 1
+			self.y -= 1
+		elif direction == 7:
+			self.x += 1
+			self.y += 1
+
+		if self.x < 0 : self.x = 0
+		if self.x >= map.h : self.x = map.h - 1
+		if self.y < 0 : self.y = 0
+		if self.y >= map.w : self.y = map.w - 1
+
 	def cango_home(self, distance):
 		while self.energy >= 0 and distance > 0:
-			move = self.move_formula()
-			distance -= move
-			self.decrease_energy(move)
+			distance -= 1
+			self.decrease_energy(self.energy_cost())
 		if distance <= 0:
 			return True
 		else:
@@ -82,7 +108,7 @@ class Blob(object):
 		map.remove_food(position[0],position[1])
 
 	def caneat_food(self, p):
-		return self.is_possible(p) and self.senseable(p[0],p[1])
+		return self.senseable(p[0],p[1])
 
 	def senseable(self, x, y):
 		max_x = self.x + self.sense
@@ -95,18 +121,15 @@ class Blob(object):
 			return True
 		return False
 
-	def decrease_energy(self, distance):
-		self.energy -= distance
+	def decrease_energy(self, energy_cost):
+		self.energy -= energy_cost
 	
 	def clone(self):
-		if food < 2:
+		if self.food < 2:
 			return None
 
 		if random() < self.eps_mutation:
 			speed = self.mutation(self.speed)
-
-		if random() < self.eps_mutation:
-			energy = self.mutation(self.energy)
 
 		if random() < self.eps_mutation:
 			size = self.mutation(self.size)
@@ -132,7 +155,7 @@ class Blob(object):
 		
 		for x in range(min_x,max_x+1):
 			for y in range(min_y, max_y+1):
-				if x > 0 and x < 10 and y > 0 and y < 10: 
+				if (x > 0 and x < 10) and (y > 0 and y < 10): 
 					if map.food_board[x,y] != None:
 						return True
 
@@ -151,13 +174,14 @@ class Blob(object):
 	def mutation(trait):
 		new_trait = trait
 		if random() > 0.5:
-			new_trait += random()
+			new_trait += np.random.randint(trait)
 		else:
-			new_trait -= random()
+			new_trait -= np.random.randint(trait)
+		return new_trait
 
 	distance = lambda self, p: sqrt((self.x - p[0])**2+(self.y - p[1])**2) 
 
-	move_formula = lambda self: (self.energy + self.speed)/self.size if self.energy != 0 else 0
+	energy_cost = lambda self: 2 * self.speed + self.size**2 + self.sense
 	
 	def reset(self):
 		self.energy = self.heritage['energy']
@@ -165,6 +189,10 @@ class Blob(object):
 		self.sense = self.heritage['sense']
 		self.size = self.heritage['size']
 		self.food = 0
+		self.is_moving = True
+		self.safe = True
+		self.dead = False
+
 	@staticmethod
 	def choice(tuple_list):
 		index = np.random.randint(0,len(tuple_list))

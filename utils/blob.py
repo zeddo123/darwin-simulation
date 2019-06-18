@@ -18,12 +18,13 @@ class Blob(object):
 		self.dead = False
 		self.can_clone = False
 		self.is_moving = True
+		self.nothing_todo = False
 
 		self.name = name
 		self.heritage = {'speed':speed,'size':size,'energy':energy,'sense':sense}
 
 	def move(self, map):
-		if self.energy >= 1:
+		if self.energy >= self.energy_cost():
 			if self.food < 2:
 				if self.sense_food(map):
 					food_positions = list(filter(self.caneat_food,map.get_foods_positions(self)))
@@ -37,6 +38,7 @@ class Blob(object):
 				self.go_home(map)
 		else:
 			self.is_moving = False
+			self.nothing_todo = True
 
 	def go_home(self, map):
 		distance_home = min([
@@ -50,12 +52,13 @@ class Blob(object):
 			self.x = 0
 			if self.food >= 2: self.can_clone = True
 			self.is_moving = False
+			self.nothing_todo = True
 		else:
 			self.dead = True
 
 	def discover(self, map):
 		for s in range(self.speed):
-			if self.energy > 0:
+			if self.energy > self.energy_cost():
 				direction = np.random.randint(8)
 				self.move_in_direction(direction, map)
 				self.decrease_energy(self.energy_cost())
@@ -128,16 +131,19 @@ class Blob(object):
 		if self.food < 2:
 			return None
 
+		speed = self.speed
 		if random() < self.eps_mutation:
 			speed = self.mutation(self.speed)
 
+		size = self.size
 		if random() < self.eps_mutation:
 			size = self.mutation(self.size)
 
+		sense = self.sense
 		if random() < self.eps_mutation:
 			sense = self.mutation(self.sense)
 
-		return Blob(self.x, self.y, speed, size, energy)
+		return Blob(self.x, self.y, speed, size, self.heritage['energy'], sense, name=self.name+' son')
 
 	def is_possible(self, p):
 		distance = self.distance(p)

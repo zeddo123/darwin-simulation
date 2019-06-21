@@ -24,17 +24,21 @@ class Blob(object):
 		self.heritage = {'speed':speed,'size':size,'energy':energy,'sense':sense}
 
 	def move(self, map):
+		print(f'energy_cost : {self.energy_cost()}')
 		if self.energy >= self.energy_cost():
 			if self.food < 2:
 				if self.sense_food(map):
+					print('sense food hmmm')
 					food_positions = list(filter(self.caneat_food,map.get_foods_positions(self)))
 					food_position = self.choice(food_positions)
 
 					self.decrease_energy(self.energy_cost())
 					self.eat_food(map,food_position)
 				else:
+					print('discovering')
 					self.discover(map)	
 			else:
+				print('going home')
 				self.go_home(map)
 		else:
 			self.is_moving = False
@@ -53,17 +57,19 @@ class Blob(object):
 			if self.food >= 2: self.can_clone = True
 			self.is_moving = False
 			self.nothing_todo = True
-			print('-----------home')
 		else:
 			self.dead = True
 
 	def discover(self, map):
 		for s in range(self.speed):
-			if self.energy > self.energy_cost():
+			if self.energy >= self.energy_cost():
 				direction = np.random.randint(8)
 				self.move_in_direction(direction, map)
 				self.decrease_energy(self.energy_cost())
 				self.move(map)
+			else:
+				self.dead = True
+				break
 
 	def move_in_direction(self, direction, map):
 		if direction == 0:
@@ -200,7 +206,7 @@ class Blob(object):
 		self.safe = True
 		self.dead = False
 		self.nothing_todo = False
-		
+
 	@staticmethod
 	def choice(tuple_list):
 		index = np.random.randint(0,len(tuple_list))

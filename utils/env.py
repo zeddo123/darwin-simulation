@@ -11,12 +11,15 @@ class Environement(object):
 		self.blobs = list(args) # stores the living blobs
 
 	def set_food(self):
+		self.food_board = np.empty((self.h, self.w), dtype=Food)
 		for r in range(ceil(self.h*self.w/5)):
 			x = np.random.randint(self.h)
 			y = np.random.randint(self.w)
 			self.food_board[x,y] = Food()
 
-	def remove_food(self, x, y):
+	def remove_food(self, position):
+		x = position[0]
+		y = position[1]
 		if x in range(self.h) and y in range(self.w):
 			self.food_board[x,y] = None
 
@@ -40,7 +43,7 @@ class Environement(object):
 	def cloning(self):
 		for blob in self.blobs:
 			new_blob = blob.clone()
-			if new_blob != None: 
+			if new_blob != None:
 				self.add_blob(new_blob)
 				print('\t[log]:new blob')
 			blob.reset()
@@ -72,6 +75,8 @@ class Environement(object):
 						blob.move(self)
 			self.remove_dead()
 			self.cloning()
+			self.draw_board()
+			self.set_food()
 
 
 

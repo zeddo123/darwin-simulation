@@ -53,6 +53,7 @@ class Blob(object):
 			if self.food >= 2: self.can_clone = True
 			self.is_moving = False
 			self.nothing_todo = True
+			print('-----------home')
 		else:
 			self.dead = True
 
@@ -108,7 +109,7 @@ class Blob(object):
 		self.food += 1
 		self.x = position[0]
 		self.y = position[1]
-		map.remove_food(position[0],position[1])
+		map.remove_food(position)
 
 	def caneat_food(self, p):
 		return self.senseable(p[0],p[1])
@@ -198,11 +199,12 @@ class Blob(object):
 		self.is_moving = True
 		self.safe = True
 		self.dead = False
-
+		self.nothing_todo = False
+		
 	@staticmethod
 	def choice(tuple_list):
 		index = np.random.randint(0,len(tuple_list))
 		return tuple_list[index]
 
 	def __str__(self):
-		return f'blob{self.name} : {self.food}{(self.x, self.y)}, speed {self.speed}, energy {self.energy}, size {self.size}'
+		return f'blob{self.name} : {(self.x, self.y)}, food : {self.food}, speed {self.speed}, energy {self.energy}, size {self.size}'

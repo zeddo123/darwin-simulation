@@ -1,4 +1,4 @@
-# darwin-simulation
+# Simulating Darwinian Natural Selection
 
 ## Requirements
 This script is written is **python3**.

@@ -1,5 +1,11 @@
 # darwin-simulation
-darwin natural selection simulator
+
+## Requirements
+This script is written is **python3**.
+
+all the modules required are in the *file* **req.txt**
+
+## How to run a *simulation*
 
     usage: run_simulation.py [-h] [-g N] [--plot {speed,size,sense} [{speed,size,sense} ...]]
 
@@ -7,9 +13,10 @@ darwin natural selection simulator
 
     optional arguments:
    
-    -h, --help            show this help message and exit
+    -h, --help            
+                         Show this help message and exit
    
-    __-g__ N, --generations N
+    -g N, --generations N
    
                          The number of generations that will be simulated
    
@@ -17,4 +24,5 @@ darwin natural selection simulator
    
                          Makes a plot of a specific trait
 
-_idea from Simulating Natural Selection-Primer youtube video_
+## Infos
+_idea from Simulating **Natural Selection-Primer** youtube video_

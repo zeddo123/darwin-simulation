@@ -9,7 +9,7 @@ darwin natural selection simulator
    
     -h, --help            show this help message and exit
    
-    -g N, --generations N
+    __-g__ N, --generations N
    
                          The number of generations that will be simulated
    

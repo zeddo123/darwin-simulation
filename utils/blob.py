@@ -30,10 +30,18 @@ class Blob(object):
 				if self.sense_food(map):
 					print('sense food hmmm')
 					food_positions = list(filter(self.caneat_food,map.get_foods_positions(self)))
-					food_position = self.choice(food_positions)
+					blob_positions = list(filter(self.caneat_food,map.get_blobs_positions(self)))
+
+					blob_position = None
+					food_position = None
+					if blob_positions : blob_position = self.choice(blob_positions)
+					if food_positions : food_position = self.choice(food_positions)
 
 					self.decrease_energy(self.energy_cost())
-					self.eat_food(map,food_position)
+					if blob_position:
+						self.eat_blob(map,blob_position)
+					elif food_position:
+						self.eat_food(map,food_position)
 				else:
 					print('discovering')
 					self.discover(map)	
@@ -117,6 +125,12 @@ class Blob(object):
 		self.y = position[1]
 		map.remove_food(position)
 
+	def eat_blob(self, map, position):
+		self.food += 2
+		self.x = position[0]
+		self.y = position[1]
+		map.kill_blob(position)
+
 	def caneat_food(self, p):
 		return self.senseable(p[0],p[1])
 
@@ -150,7 +164,7 @@ class Blob(object):
 		if random() < self.eps_mutation:
 			sense = self.mutation(self.sense)
 
-		return Blob(self.x, self.y, speed, size, self.heritage['energy'], sense, name=self.name+' son')
+		return Blob(self.x, self.y, speed, size, self.heritage['energy'], sense, name=self.name+'1')
 
 	def is_possible(self, p):
 		distance = self.distance(p)
@@ -169,7 +183,7 @@ class Blob(object):
 		for x in range(min_x,max_x+1):
 			for y in range(min_y, max_y+1):
 				if (x > 0 and x < 10) and (y > 0 and y < 10): 
-					if map.food_board[x,y] != None:
+					if map.food_board[x,y] != None or map.blob_position(x,y):
 						return True
 
 		return False
@@ -207,10 +221,16 @@ class Blob(object):
 		self.dead = False
 		self.nothing_todo = False
 
+	def die(self):
+		self.nothing_todo = True
+		self.dead = True
+		self.safe = False
+		self.is_moving = False
+
 	@staticmethod
 	def choice(tuple_list):
 		index = np.random.randint(0,len(tuple_list))
 		return tuple_list[index]
 
 	def __str__(self):
-		return f'blob{self.name} : {(self.x, self.y)}, food : {self.food}, speed {self.speed}, energy {self.energy}, size {self.size}'
+		return f'blob{self.name} : {(self.x, self.y)}, food : {self.food}, speed {self.speed}, energy {self.energy}, size {self.size}, sense {self.sense}'

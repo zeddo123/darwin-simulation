@@ -26,13 +26,29 @@ class Environement(object):
 	def add_blob(self, blob):
 		self.blobs = [blob] + self.blobs
 
+	def blob_position(self, x, y):
+		for blob in self.blobs:
+			if blob.x == x and blob.y == y:
+				return True
+		return False
+
 	def remove_blob(self, blob):
 		self.blobs.remove(blob)
 
+	def kill_blob(self, position):
+		x = position[0]
+		y = position[1]
+		for blob in self.blobs:
+			if blob.x == x and blob.y == y:
+				blob.die()
+				break
+
 	def get_foods_positions(self, blob):
 		food = [(i, j) for i in range(self.h) for j in range(self.h) if self.food_board[i,j] != None]
-		blob = [(b.x, b.y) for b in self.blobs if blob.size > b.size]
-		return food + blob
+		return food
+
+	def get_blobs_positions(self, blob):
+		return [(b.x, b.y) for b in self.blobs if blob.size > b.size]
 
 	def still_alive(self):
 		for blob in self.blobs:

@@ -1,8 +1,7 @@
 # darwin-simulation
 darwin natural selection simulator
 
-    usage: run_simulation.py [-h] [-g N]
-                         [--plot {speed,size,sense} [{speed,size,sense} ...]]
+    usage: run_simulation.py [-h] [-g N] [--plot {speed,size,sense} [{speed,size,sense} ...]]
 
     Simulate natural selection.
 

@@ -1,7 +1,7 @@
 # Simulating Darwinian Natural Selection
 
 ## Requirements
-This script is written is **python3**.
+This script is written is **python3.7**.
 
 all the modules required are in the *file* **req.txt**
 

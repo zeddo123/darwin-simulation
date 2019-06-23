@@ -25,4 +25,4 @@ all the modules required are in the *file* **req.txt**
                          Makes a plot of a specific trait
 
 ## Infos
-_idea from Simulating **Natural Selection-Primer** youtube video_
+_idea from :Simulating **Natural Selection  Primer's** youtube video_

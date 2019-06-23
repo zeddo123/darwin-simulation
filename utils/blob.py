@@ -66,6 +66,8 @@ class Blob(object):
 			self.is_moving = False
 			self.nothing_todo = True
 		else:
+			self.is_moving = False
+			self.nothing_todo = True
 			self.dead = True
 
 	def discover(self, map):
@@ -107,7 +109,7 @@ class Blob(object):
 		if self.y >= map.w : self.y = map.w - 1
 
 	def cango_home(self, distance):
-		while self.energy >= 0 and distance > 0:
+		while self.energy >= self.energy_cost() and distance > 0:
 			distance -= 1
 			self.decrease_energy(self.energy_cost())
 		if distance <= 0:
@@ -201,9 +203,12 @@ class Blob(object):
 	def mutation(trait):
 		new_trait = trait
 		if random() > 0.5:
-			new_trait += np.random.randint(trait)
+			new_trait += np.random.randint(trait + 1)
 		else:
-			new_trait -= np.random.randint(trait)
+			new_trait -= np.random.randint(trait + 1)
+
+		if new_trait == 0: return 1
+		
 		return new_trait
 
 	distance = lambda self, p: sqrt((self.x - p[0])**2+(self.y - p[1])**2) 

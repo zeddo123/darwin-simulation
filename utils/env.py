@@ -12,7 +12,7 @@ class Environement(object):
 
 	def set_food(self):
 		self.food_board = np.empty((self.h, self.w), dtype=Food)
-		for r in range(ceil(self.h*self.w/5)):
+		for r in range(100):
 			x = np.random.randint(self.h)
 			y = np.random.randint(self.w)
 			self.food_board[x,y] = Food()
@@ -66,7 +66,8 @@ class Environement(object):
 
 	def remove_dead(self):
 		for blob in self.blobs:
-			if blob.dead == True:
+			if blob.food < 2 or blob.dead:
+				print('[log]:removed blob')
 				self.blobs.remove(blob)
 
 	def draw_board(self):
@@ -89,6 +90,7 @@ class Environement(object):
 						print('safe', blob.safe)
 						print('dead', blob.dead)
 						blob.move(self)
+			self.print_blobs()
 			self.remove_dead()
 			self.cloning()
 			self.draw_board()

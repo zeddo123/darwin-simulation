@@ -118,6 +118,15 @@ class Blob(object):
 			return False
 
 	def go_to(self, position):
+		if type(position) != tuple or len(position) != 2:
+			raise TypeError('position must be a tuple of two elements')
+
+		if type(position[0]) != int or type(position[1]) != int:
+			raise TypeError('elements of the tuple must be integers')
+
+		if position[0] < 0 or position[1] < 0:
+			raise ValueError('The positions can\'t be negativ')
+
 		self.x = position[0]
 		self.y = position[1]
 
@@ -137,6 +146,9 @@ class Blob(object):
 		return self.senseable(p[0],p[1])
 
 	def senseable(self, x, y):
+		if x < 0 or y < 0:
+			raise ValueError('The positions can\'t be negativ')
+			
 		max_x = self.x + self.sense
 		min_x = self.x - self.sense
 

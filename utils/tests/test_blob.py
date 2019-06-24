@@ -1,5 +1,5 @@
 import unittest
-from ../utils.blob import Blob
+from ../blob import Blob
 
 class TestBlob(unittest.TestCase):
 	"""unittest TestBlob"""
@@ -9,7 +9,7 @@ class TestBlob(unittest.TestCase):
 	def test_go_to_values(self):
 		self.blob.go_to((5, 5))
 		self.assertAlmostEqual((self.x, self.y), (5,5))
-		
+
 		self.assertRaises(ValueError, self.blob.go_to, (0,-1))
 		self.assertRaises(ValueError, self.blob.go_to, (-1,0))
 

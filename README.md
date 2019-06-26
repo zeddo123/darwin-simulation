@@ -2,7 +2,7 @@
 
 ## How to run a *simulation*
 
-    usage: run_simulation.py [-h] [-g N] [--plot {speed,size,sense} [{speed,size,sense} ...]]
+    usage: run_simulation.py [-h] [-g N] [--plot {speed,size,sense} [{speed,size,sense,population} ...]]
 
     Simulate natural selection.
 
@@ -15,7 +15,7 @@
    
                          The number of generations that will be simulated
    
-    --plot {speed,size,sense} [{speed,size,sense} ...]
+    --plot {speed,size,sense} [{speed,size,sense,population} ...]
    
                          Makes a plot of a specific trait
 

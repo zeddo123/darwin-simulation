@@ -1,5 +1,9 @@
+import sys
+sys.path.append('../')
+
 import unittest
-from ../blob import Blob
+
+from utils.blob import Blob
 
 class TestBlob(unittest.TestCase):
 	"""unittest TestBlob"""
@@ -8,7 +12,7 @@ class TestBlob(unittest.TestCase):
 
 	def test_go_to_values(self):
 		self.blob.go_to((5, 5))
-		self.assertAlmostEqual((self.x, self.y), (5,5))
+		self.assertAlmostEqual((self.blob.x, self.blob.y), (5,5))
 
 		self.assertRaises(ValueError, self.blob.go_to, (0,-1))
 		self.assertRaises(ValueError, self.blob.go_to, (-1,0))
@@ -32,3 +36,19 @@ class TestBlob(unittest.TestCase):
 
 		self.assertRaises(ValueError, self.blob.senseable, -1, 0)
 
+	def test_senseable_types(self):
+		# test type for string
+		self.assertRaises(TypeError,self.blob.senseable,'test1','test2')
+		self.assertRaises(TypeError,self.blob.senseable,3,'test2')
+		self.assertRaises(TypeError,self.blob.senseable,'test1',3)
+
+	def test_energy_cost_values(self):
+		# 2 * self.speed + self.size^2 + self.sense
+		self.blob.speed = 1
+		self.blob.size = 1
+		self.blob.sense = 1
+
+		self.assertAlmostEqual(self.blob.energy_cost(), 4)
+
+if __name__ == '__main__':
+	unittest.main()

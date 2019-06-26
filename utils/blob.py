@@ -146,6 +146,9 @@ class Blob(object):
 		return self.senseable(p[0],p[1])
 
 	def senseable(self, x, y):
+		if type(x) != int or type(y) != int:
+			raise TypeError('the 2nd and 3rd argment must be integers')
+		
 		if x < 0 or y < 0:
 			raise ValueError('The positions can\'t be negativ')
 			

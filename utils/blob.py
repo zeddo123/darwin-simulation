@@ -24,7 +24,6 @@ class Blob(object):
 		self.heritage = {'speed':speed,'size':size,'energy':energy,'sense':sense}
 
 	def move(self, map):
-		print(f'energy_cost : {self.energy_cost()}')
 		if self.energy >= self.energy_cost():
 			if self.food < 2:
 				if self.sense_food(map):
@@ -39,6 +38,7 @@ class Blob(object):
 
 					self.decrease_energy(self.energy_cost())
 					if blob_position:
+						print('\n\t\t\t    eating a friend of mine\n')
 						self.eat_blob(map,blob_position)
 					elif food_position:
 						self.eat_food(map,food_position)
@@ -253,4 +253,4 @@ class Blob(object):
 		return tuple_list[index]
 
 	def __str__(self):
-		return f'blob{self.name} : {(self.x, self.y)}, food : {self.food}, speed {self.speed}, energy {self.energy}, size {self.size}, sense {self.sense}'
+		return f'blob{self.name} : {(self.x, self.y)}, food : {self.food}, speed {self.speed}, energy {self.energy}, size {self.size}, sense {self.sense} energy_cost : {self.energy_cost()}'

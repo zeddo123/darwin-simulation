@@ -3,6 +3,9 @@ import matplotlib.pyplot as plt
 def plot(env, plot_list):
 	if plot_list != None:
 		for plot in plot_list:
+			if plot == 'population':
+				plt.plot(env.population_size)
+				plt.show()
 			if plot == 'speed':
 				x = [blob.speed for blob in env.blobs]
 				y = axe_y(env.blobs,x,plot)

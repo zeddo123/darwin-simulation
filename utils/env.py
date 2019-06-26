@@ -10,9 +10,12 @@ class Environement(object):
 		self.food_board = np.empty((h,w), dtype=Food) # matrixs where the food is
 		self.blobs = list(args) # stores the living blobs
 
+		# For ploting
+		self.population_size = [len(self.blobs)]
+
 	def set_food(self):
 		self.food_board = np.empty((self.h, self.w), dtype=Food)
-		for r in range(100):
+		for r in range(40):
 			x = np.random.randint(self.h)
 			y = np.random.randint(self.w)
 			self.food_board[x,y] = Food()
@@ -41,7 +44,7 @@ class Environement(object):
 		for blob in self.blobs:
 			if blob.x == x and blob.y == y:
 				blob.die()
-				break
+				self.remove_blob(blob)
 
 	def get_foods_positions(self, blob):
 		food = [(i, j) for i in range(self.h) for j in range(self.h) if self.food_board[i,j] != None]
@@ -86,16 +89,15 @@ class Environement(object):
 			while self.still_alive():
 				for blob in self.blobs:
 					while blob.is_moving and not blob.nothing_todo:
-						print(blob)
-						print('safe', blob.safe)
-						print('dead', blob.dead)
+						print('\n',blob)
 						blob.move(self)
+
+			self.population_size.append(len(self.blobs))
 			self.print_blobs()
 			self.remove_dead()
 			self.cloning()
 			self.draw_board()
 			self.set_food()
-
 
 
 

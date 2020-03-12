@@ -14,7 +14,7 @@ parser.add_argument('--plot', nargs='+', type=str, help=plot_help, choices=choic
 args = parser.parse_args()
 
 if args.plot : args.plot = list(set(args.plot))
-if args.generations == None: args.generations = 1
+if args.generations is None: args.generations = 1
 
 env = Environement(10,10,
 	Blob(1,4,speed=12,size=3,energy=400,sense=1),
